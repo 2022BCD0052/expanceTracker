@@ -6,15 +6,18 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import Button from "@/components/Button";
 import Animated,{FadeIn} from 'react-native-reanimated'
+import { useRouter } from "expo-router";
 
-const Welcome = () => {
+const Welcome = () => {  
+
+  const router = useRouter();
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         {/* login button and image */}
         <View>
-          <TouchableOpacity style={styles.loginButton}>
-            <Typo fontWeight={"500"}>Sign in</Typo>
+            <TouchableOpacity  style={styles.loginButton} onPress={() => router.push("/(auth)/login")}>
+            <Typo fontWeight={"500"} >Sign in</Typo>
           </TouchableOpacity>
           <Animated.Image
           entering={FadeIn.duration(1000)}
