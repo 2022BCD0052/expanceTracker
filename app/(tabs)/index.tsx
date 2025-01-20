@@ -5,8 +5,11 @@ import Typo from '@/components/Typo'
 import { colors } from '@/constants/theme'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/config/firebase'
+import { useAuth } from '@/context/authContext'
 
 const Home = () => {
+  const {user}  = useAuth();
+  console.log("user",user);
     const handleLogOut =async () => {
 
         // Log out
@@ -14,7 +17,8 @@ const Home = () => {
     }
   return (
     <View>
-        <Text>Home</Text>
+        <Text>H  jjiome</Text>
+
         {/* Home Page Content */}
         {/* Navigation */}
         {/* Dynamic Content */}
@@ -23,6 +27,7 @@ const Home = () => {
         {/* Error Screen */}
         {/* Empty Screen */}
         {/* Profile Screen */}
+
         {/* Settings Screen */}
         <Button onPress={handleLogOut}>
             <Typo color={colors.black}></Typo>

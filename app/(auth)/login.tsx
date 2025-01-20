@@ -8,19 +8,33 @@ import Input from "@/components/Input";
 import * as Icons from "phosphor-react-native";
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/authContext";
 const Login = () => {
   const router = useRouter();
   const emailRef = useRef("");
+  const { login :   loginUser} = useAuth();
   const passwordRef = useRef("");
   const [isLoading, setIsLoading] = React.useState(false);
-  const handleSubmit = async()=>{
-    if(emailRef.current && passwordRef.current){
-      console.log(emailRef.current,passwordRef.current)
-    }else{
-      alert("Please fill all the fields")
+
+  const handleSubmit = async () => {
+    if (!emailRef.current || !passwordRef.current) {
+      alert("Please fill all the fields");
+      return;
     }
- 
-  }
+
+    setIsLoading(true);
+    const res = await loginUser(emailRef.current, passwordRef.current);
+    setIsLoading(false);
+    console.log("result", res);
+    if (res.success) {
+    } else {
+      alert("An error occurred during login. Please try again.");
+    }
+  };
+
+
+
+
   return (
     <View style={styles.container}>
       <BackButton />
@@ -114,4 +128,4 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
   },
-});
+})

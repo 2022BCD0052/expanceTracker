@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser({ uid: user?.uid, email: user?.email, name: user?.displayName });
-      
+      updateUserData(user.uid);
   router.replace('/(tabs)')
     } 
     
@@ -39,8 +39,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       await signInWithEmailAndPassword(auth, email, password);
       return { success: true };
     } catch (error: any) {
-      return { success: false, msg: error.message };
-    }
+      let msg = error.message;
+      console.log( "error message",msg);
+      if (error.code === "auth/user-not-found") {
+        msg = "User not found. Please register first.";
+      } else if (error.code === "auth/wrong-password") {
+        msg = "Invalid password. Please try again.";
+      }
+      return { success: false, msg };}
   };
 
   const register = async (email: string, password: string, name: string) => {
@@ -57,7 +63,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       return { success: true };
     } catch (error: any) {
-      return { success: false, msg: error.message };
+      let msg = error.message;
+      console.log( "error message",msg);
+      if (error.code === "auth/email-already-in-use") {
+        msg = "Email already in use. Please login.";
+        
+      }
+      return { success: false, msg };
     }
   };
 
