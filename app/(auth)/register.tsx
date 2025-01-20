@@ -8,15 +8,19 @@ import Input from "@/components/Input";
 import * as Icons from "phosphor-react-native";
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/authContext";
 const register = () => {
   const router = useRouter();
   const nameRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const {register:registerUser} = useAuth();
   const handleSubmit = async()=>{
     if(emailRef.current && passwordRef.current && nameRef.current){
-      console.log(emailRef.current,passwordRef.current,nameRef.current)
+      setIsLoading(true);
+      const res = await register()
+
     }else{
       alert("Please fill all the fields")
     }
