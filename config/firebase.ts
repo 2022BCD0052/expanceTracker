@@ -31,5 +31,5 @@ export const auth = initializeAuth(app,{
 const analytics = getAnalytics(app);
 
 // Initialize Firestore
-export const db = getFirestore(app);
+export const firestore = getFirestore(app);
 
