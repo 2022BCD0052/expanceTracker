@@ -1,14 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import ScreenWrapper from '@/components/ScreenWrapper'
 
-const statics = () => {
+const statistics = () => {
   return (
-    <View>
+    <ScreenWrapper>
       <Text>statics</Text>
-    </View>
+    </ScreenWrapper>
   )
 }
 
-export default statics
+export default statistics
 
 const styles = StyleSheet.create({})

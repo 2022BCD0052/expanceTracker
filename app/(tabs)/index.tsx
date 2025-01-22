@@ -6,6 +6,7 @@ import { colors } from '@/constants/theme'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/config/firebase'
 import { useAuth } from '@/context/authContext'
+import ScreenWrapper from '@/components/ScreenWrapper'
 
 const Home = () => {
   const {user}  = useAuth();
@@ -16,7 +17,7 @@ const Home = () => {
         await signOut(auth)
     }
   return (
-    <View>
+    <ScreenWrapper>
         <Text>H  jjiome</Text>
 
         {/* Home Page Content */}
@@ -30,9 +31,9 @@ const Home = () => {
 
         {/* Settings Screen */}
         <Button onPress={handleLogOut}>
-            <Typo color={colors.black}></Typo>
+            <Typo color={colors.black}>Logout</Typo>
         </Button>
-    </View>
+    </ScreenWrapper>
   )
 }
 

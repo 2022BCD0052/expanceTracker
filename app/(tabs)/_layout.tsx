@@ -8,7 +8,7 @@ const _layout = () => {
     <Tabs tabBar={CustonTabs}  screenOptions={{headerShown: false}}>
       {/* Add your screens here */}
    <Tabs.Screen name="index" options={{title:"index"}} />
-    <Tabs.Screen name="statics" options={{title:"statics"}} />
+    <Tabs.Screen name="statistics" options={{title:"statistics"}} />
     <Tabs.Screen name="wallet" options={{title:"wallet"}} />
     <Tabs.Screen name="profile" options={{title:"profile"}} />
 
