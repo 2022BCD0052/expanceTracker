@@ -4,12 +4,16 @@ import ScreenWrapper from '@/components/ScreenWrapper'
 import { colors, radius, spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
 import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
 
 const profile = () => {
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <Header/>
+        <Header 
+        title='Profile'
+        leftIcon={<BackButton  iconSize={26}  />}
+        />
       </View>
     </ScreenWrapper>
   )
