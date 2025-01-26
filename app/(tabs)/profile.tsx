@@ -5,15 +5,33 @@ import { colors, radius, spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
 import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
+import Typo from '@/components/Typo'
+import { useAuth } from '@/context/authContext'
 
 const profile = () => {
+  const {user} = useAuth()
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         <Header 
         title='Profile'
         leftIcon={<BackButton  iconSize={26}  />}
+        style={{marginVertical : spacingY._10}}
+
         />
+        {/* user info  */}
+        <View style={styles.userInfo}>
+          {/* avator */}
+          <View></View>
+          {/* user image */}
+          {/* name and email */}
+          <View style={styles.nameContainer}>
+            <Typo size={24} fontWeight={"600"} color={colors.neutral100}> {user?.name}</Typo>
+          </View>
+          <View style={styles.nameContainer}>
+            <Typo size={15} fontWeight={"600"} color={colors.neutral400}> {user?.email}</Typo>
+          </View>
+        </View>
       </View>
     </ScreenWrapper>
   )

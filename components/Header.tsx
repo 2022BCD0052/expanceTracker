@@ -19,7 +19,6 @@ export default function Header( { title ="",leftIcon,style}:HeaderProps) {
     </Typo>
 }
 
-      <Typo>Header</Typo>
     </View>
   )
 }
