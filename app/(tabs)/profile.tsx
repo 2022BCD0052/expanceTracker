@@ -3,12 +3,13 @@ import React from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { colors, spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
+import Header from '@/components/Header'
 
 const profile = () => {
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <h/>
+        <Header/>
       </View>
     </ScreenWrapper>
   )
