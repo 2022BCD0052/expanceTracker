@@ -25,8 +25,14 @@ export default function Header( { title ="",leftIcon,style}:HeaderProps) {
 }
 
 const styles = StyleSheet.create({
-    container :{},
-    leftIcon : {},
+    container :{
+        width : '100%',
+        alignItems : 'center',
+        flexDirection : 'row',
+    },
+    leftIcon : {
+        alignSelf : 'flex-start',
+    },
     rightIcon : {},
 
 }) 
