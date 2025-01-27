@@ -7,6 +7,7 @@ import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'
 import Typo from '@/components/Typo'
 import { useAuth } from '@/context/authContext'
+import { Image } from 'expo-image'
 
 const profile = () => {
   const {user} = useAuth()
@@ -24,6 +25,7 @@ const profile = () => {
           {/* avator */}
           <View></View>
           {/* user image */}
+          <Image source={user?.image} style={styles.avatar}  contentFit='cover'/>
           {/* name and email */}
           <View style={styles.nameContainer}>
             <Typo size={24} fontWeight={"600"} color={colors.neutral100}> {user?.name}</Typo>
