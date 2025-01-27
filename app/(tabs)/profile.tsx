@@ -106,7 +106,7 @@ const profile = () => {
             return (
               <Animated.View
                 entering={FadeInDown.duration(1000).springify().damping(14).delay(index*50)}
-               style={[styles.listItem]} key={index}>
+               style={[styles.listItem]} key={index.toString()}>
                 <TouchableOpacity style={[styles.flexRow]}>
                   {/* icon */}
                   <View
