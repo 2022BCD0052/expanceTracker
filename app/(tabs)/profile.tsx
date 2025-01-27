@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
@@ -12,6 +12,8 @@ import { getProfileImage } from "@/services/imageService";
 import { AccountOptionType } from "@/types";
 import * as Icons from "phosphor-react-native";
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 const profile = () => {
   const { user } = useAuth();
@@ -62,11 +64,41 @@ const profile = () => {
           weight="fill"
         />
       ),
-      routeName: "/(modals)/profileModal",
+      routeName: "/app/(auth)/login.tsx",
       bgColor: "#e11d48",
     },
   ];
+  const  handleLogOut =  async () => {
+    // logout user
+    await signOut(auth)
+    console.log("logout user");
+  };
+const shoeLogOutAlert = ()=>{
+  Alert.alert(
+    'Confirm',
+    'Are you sure you want to logout?',
+    [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      },
+      { text: 'Logout', 
+         onPress:()=> handleLogOut(),
+          style: 'destructive'
 
+       },
+    ],
+    { cancelable: false }
+  );
+}
+  const handlePress = (item: AccountOptionType) => {
+    if(item.title === "Logout"){
+      // logout user
+      shoeLogOutAlert()
+    }
+
+  };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -107,7 +139,9 @@ const profile = () => {
               <Animated.View
                 entering={FadeInDown.duration(1000).springify().damping(14).delay(index*50)}
                style={[styles.listItem]} key={index.toString()}>
-                <TouchableOpacity style={[styles.flexRow]}>
+                <TouchableOpacity style={[styles.flexRow]} activeOpacity={0.7} 
+                onPress={() => handlePress(item)}
+                >
                   {/* icon */}
                   <View
                     style={[styles.ListIcon, { backgroundColor: item.bgColor }]}
