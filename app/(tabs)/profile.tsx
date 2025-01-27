@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
@@ -98,6 +98,25 @@ const profile = () => {
               {user?.email}
             </Typo>
           </View>
+        </View>
+        {/* account options */}
+        <View style={styles.accountOptions}>
+          {accountOptions.map((item,index)=>{
+            return (
+              <View style={[styles.listItem]} key={index}>
+              <TouchableOpacity style={styles.flexRow}>
+                {/* icon */}
+                <View style={[styles.ListIcon, { backgroundColor: item.bgColor }]}>
+                  {item.icon && item.icon}
+
+                </View>
+
+               </TouchableOpacity>
+              </View>
+            
+            )
+          })}
+
         </View>
       </View>
     </ScreenWrapper>
