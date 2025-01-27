@@ -101,22 +101,30 @@ const profile = () => {
         </View>
         {/* account options */}
         <View style={styles.accountOptions}>
-          {accountOptions.map((item,index)=>{
+          {accountOptions.map((item, index) => {
             return (
               <View style={[styles.listItem]} key={index}>
-              <TouchableOpacity style={styles.flexRow}>
-                {/* icon */}
-                <View style={[styles.ListIcon, { backgroundColor: item.bgColor }]}>
-                  {item.icon && item.icon}
-
-                </View>
-
-               </TouchableOpacity>
+                <TouchableOpacity style={[styles.flexRow]}>
+                  {/* icon */}
+                  <View
+                    style={[styles.ListIcon, { backgroundColor: item.bgColor }]}
+                  >
+                    {item.icon && item.icon}
+                  </View>
+                  <Typo size={16} fontWeight={"600"}
+                  style={{flex:1}}
+                   color={colors.neutral100}>
+                    {item.title}
+                  </Typo>
+                  <Icons.CaretRight
+                    size={verticalScale(20)}
+                    color={colors.white}
+                    weight="bold"
+                  />
+                </TouchableOpacity>
               </View>
-            
-            )
+            );
           })}
-
         </View>
       </View>
     </ScreenWrapper>
