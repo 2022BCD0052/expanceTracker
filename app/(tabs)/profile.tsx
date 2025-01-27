@@ -1,45 +1,110 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import ScreenWrapper from '@/components/ScreenWrapper'
-import { colors, radius, spacingX, spacingY } from '@/constants/theme'
-import { verticalScale } from '@/utils/styling'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
-import Typo from '@/components/Typo'
-import { useAuth } from '@/context/authContext'
-import { Image } from 'expo-image'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import { colors, radius, spacingX, spacingY } from "@/constants/theme";
+import { verticalScale } from "@/utils/styling";
+import Header from "@/components/Header";
+import BackButton from "@/components/BackButton";
+import Typo from "@/components/Typo";
+import { useAuth } from "@/context/authContext";
+import { Image } from "expo-image";
+import { getProfileImage } from "@/services/imageService";
+import { AccountOptionType } from "@/types";
+import * as Icons from "phosphor-react-native";
 
 const profile = () => {
-  const {user} = useAuth()
+  const { user } = useAuth();
+
+  const accountOptions: AccountOptionType[] = [
+    {
+      title: "Edit Profile",
+      icon: (
+        <Icons.User
+          size={verticalScale(30)}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      routeName: "/(modals)/profileModal",
+      bgColor: "#6366f1",
+    },
+    {
+      title: "Settings",
+      icon: (
+        <Icons.GearSix
+          size={verticalScale(30)}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      // routeName: "/(modals)/profileModal",
+      bgColor: "#059661",
+    },
+    {
+      title: "Privacy Policy",
+      icon: (
+        <Icons.Lock
+          size={verticalScale(30)}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      routeName: "/(modals)/profileModal",
+      bgColor: colors.neutral600,
+    },
+    {
+      title: "Logout",
+      icon: (
+        <Icons.Power
+          size={verticalScale(30)}
+          color={colors.white}
+          weight="fill"
+        />
+      ),
+      routeName: "/(modals)/profileModal",
+      bgColor: "#e11d48",
+    },
+  ];
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <Header 
-        title='Profile'
-        leftIcon={<BackButton  iconSize={26}  />}
-        style={{marginVertical : spacingY._10}}
-
+        <Header
+          title="Profile"
+          leftIcon={<BackButton iconSize={26} />}
+          style={{ marginVertical: spacingY._10 }}
         />
         {/* user info  */}
         <View style={styles.userInfo}>
           {/* avator */}
           <View></View>
           {/* user image */}
-          <Image source={user?.image} style={styles.avatar}  contentFit='cover'/>
+          <Image
+            source={getProfileImage(user?.image)}
+            style={styles.avatar}
+            contentFit="cover"
+            transition={100}
+          />
           {/* name and email */}
           <View style={styles.nameContainer}>
-            <Typo size={24} fontWeight={"600"} color={colors.neutral100}> {user?.name}</Typo>
+            <Typo size={24} fontWeight={"600"} color={colors.neutral100}>
+              {" "}
+              {user?.name}
+            </Typo>
           </View>
           <View style={styles.nameContainer}>
-            <Typo size={15} fontWeight={"600"} color={colors.neutral400}> {user?.email}</Typo>
+            <Typo size={15} fontWeight={"600"} color={colors.neutral400}>
+              {" "}
+              {user?.email}
+            </Typo>
           </View>
         </View>
       </View>
     </ScreenWrapper>
-  )
-}
+  );
+};
 
-export default profile
+export default profile;
 
 const styles = StyleSheet.create({
   container: {
@@ -77,9 +142,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 4,
-    padding : 5,
+    padding: 5,
   },
- 
+
   nameContainer: {
     alignItems: "center",
     gap: verticalScale(4),
@@ -105,4 +170,3 @@ const styles = StyleSheet.create({
     gap: spacingX._10,
   },
 });
-
