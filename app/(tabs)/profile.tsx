@@ -11,6 +11,7 @@ import { Image } from "expo-image";
 import { getProfileImage } from "@/services/imageService";
 import { AccountOptionType } from "@/types";
 import * as Icons from "phosphor-react-native";
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const profile = () => {
   const { user } = useAuth();
@@ -103,7 +104,9 @@ const profile = () => {
         <View style={styles.accountOptions}>
           {accountOptions.map((item, index) => {
             return (
-              <View style={[styles.listItem]} key={index}>
+              <Animated.View
+                entering={FadeInDown.duration(1000).springify().damping(14).delay(index*50)}
+               style={[styles.listItem]} key={index}>
                 <TouchableOpacity style={[styles.flexRow]}>
                   {/* icon */}
                   <View
@@ -122,7 +125,7 @@ const profile = () => {
                     weight="bold"
                   />
                 </TouchableOpacity>
-              </View>
+              </Animated.View>
             );
           })}
         </View>
