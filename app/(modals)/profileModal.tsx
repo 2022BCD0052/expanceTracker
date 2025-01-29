@@ -1,14 +1,45 @@
-import { StyleSheet, Text, View } from 'react-native'
+import {  ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { colors, spacingX, spacingY } from '@/constants/theme'
 import { scale, verticalScale } from '@/utils/styling'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import ModalWrapper from '@/components/ModalWrapper'
+import Header from '@/components/Header'
+import BackButton from '@/components/BackButton'
+import { getProfileImage } from '@/services/imageService'
+import { User } from 'phosphor-react-native'
+import { Image } from 'expo-image'
 
 const profileModal = () => {
   return (
     <ModalWrapper>
-      <Text>profileModal</Text>
+        <View style={styles.container}>
+            <Header
+            title=" Update Profile"
+            leftIcon={<BackButton />}
+            style={{ marginBottom: spacingY._10 }}
+            />
+            {/* <ProfileForm /> */}
+            <ScrollView
+            contentContainerStyle={styles.form}
+            
+            >
+              <View style={styles.avatarContainer}>
+                <View style={styles.avatar}>
+                  <Image
+                    source={getProfileImage('null')}
+                    style={styles.avatar}
+                    contentFit='cover'
+                    transition={100}
+                    
+                  />
+                </View>
+            
+
+              </View>
+            </ScrollView>
+          
+          </View>
     </ModalWrapper>
   )
 }

@@ -30,9 +30,7 @@ const Home = () => {
         {/* Profile Screen */}
 
         {/* Settings Screen */}
-        <Button onPress={handleLogOut}>
-            <Typo color={colors.black}>Logout</Typo>
-        </Button>
+      
     </ScreenWrapper>
   )
 }
