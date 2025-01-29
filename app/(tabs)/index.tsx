@@ -18,7 +18,7 @@ const Home = () => {
     }
   return (
     <ScreenWrapper>
-        <Text>H  jjiome</Text>
+        <Text></Text>
 
         {/* Home Page Content */}
         {/* Navigation */}

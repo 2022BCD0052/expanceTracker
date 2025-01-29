@@ -14,9 +14,11 @@ import * as Icons from "phosphor-react-native";
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
+import { useRouter } from "expo-router";
 
 const profile = () => {
   const { user } = useAuth();
+  const router = useRouter();
 
   const accountOptions: AccountOptionType[] = [
     {
@@ -64,15 +66,15 @@ const profile = () => {
           weight="fill"
         />
       ),
-      routeName: "/app/(auth)/login.tsx",
+      routeName: "/(modals)/profileModal",
       bgColor: "#e11d48",
     },
   ];
-  const  handleLogOut =  async () => {
-    // logout user
-    await signOut(auth)
-    console.log("logout user");
-  };
+ const handleLogOut =async () => {
+
+        // Log out
+        await signOut(auth)
+    }
 const shoeLogOutAlert = ()=>{
   Alert.alert(
     'Confirm',
@@ -96,6 +98,10 @@ const shoeLogOutAlert = ()=>{
     if(item.title === "Logout"){
       // logout user
       shoeLogOutAlert()
+    }
+    if(item.routeName === "/(modals)/profileModal"){
+      // navigate to the route
+      router.navigate(item.routeName)
     }
 
   };
@@ -163,6 +169,19 @@ const shoeLogOutAlert = ()=>{
             );
           })}
         </View>
+        {/* edit profile button */}
+        <TouchableOpacity
+          style={[
+            { backgroundColor: colors.primary },
+          ]}
+          activeOpacity={0.7}
+          onPress={() =>handleLogOut()}
+
+        >
+          <Typo size={16} fontWeight={"600"} color={colors.neutral100}>
+            Edit Profile  
+          </Typo>
+          </TouchableOpacity>
       </View>
     </ScreenWrapper>
   );
