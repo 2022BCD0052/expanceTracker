@@ -6,6 +6,6 @@ export const getProfileImage = (file: any) => {
       return file.uri ;
     }
 
-    // return require("../../../Pictures/wallpaper/pexels-daredevil-28288474.jpg")
+    return require("../assets/images/profile.jpeg");
 
 };

@@ -6,8 +6,9 @@ import { colors, spacingY } from '@/constants/theme'
 const isIos = Platform.OS === 'ios';
 const ModalWrapper = ({
     style,
-    children,
-    bg = colors.neutral800
+    bg = colors.neutral800,
+        children,
+
 }:ModalWrapperProps) => {
   return (
     <View style={[styles.container,{backgroundColor:bg},style && style]}>
