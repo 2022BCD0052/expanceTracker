@@ -24,7 +24,7 @@ import { useAuth } from "@/context/authContext";
 import { UpdateUser } from "@/services/userService";
 import { useRouter } from "expo-router";
 import { UserDataType } from "@/types";
-
+import * as ImagePicker from 'expo-image-picker';
 const profileModal = () => {
   const { user, updateUserData } = useAuth();
   const [userData, setUserData] = useState<UserDataType>({
@@ -43,6 +43,30 @@ const profileModal = () => {
     }
     setLoading(false);
   }, [user]); // dependency array add kiya
+
+  const onPickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Error", "Sorry, we need camera roll permissions to make this work!");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      if (userData) {
+        setUserData({
+          ...userData,
+          image: result.assets[0].uri,
+        });
+      }
+    }
+  };
+
+
 
   const handleSubmit = async () => {
     if (!userData || !userData.name.trim()) {
@@ -85,8 +109,8 @@ const profileModal = () => {
               />
               <TouchableOpacity
                 style={styles.editIcon}
-                onPress={() =>
-                  Alert.alert("Edit Profile", "Feature coming soon!")
+                onPress={onPickImage
+
                 }
               >
                 <Icons.Pencil size={20} color={colors.neutral800} />
