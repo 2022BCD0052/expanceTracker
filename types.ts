@@ -137,7 +137,7 @@ export type AccountOptionType = {
 
   export type UserDataType = {
     name: string
-    image: any
+    image: string | null;
     } | null;
   export type AuthContextType = {
     user: UserType;

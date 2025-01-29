@@ -1,4 +1,5 @@
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,18 +21,18 @@ import * as Icons from "phosphor-react-native";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { useAuth } from "@/context/authContext";
-export interface UserDataType {
-  name: string;
-  image: string | null;
-}
+import { UpdateUser } from "@/services/userService";
+import { useRouter } from "expo-router";
+import { UserDataType } from "@/types";
 
 const profileModal = () => {
-  const { user } = useAuth();
+  const { user, updateUserData } = useAuth();
   const [userData, setUserData] = useState<UserDataType>({
     name: "",
     image: null,
   });
   const [Loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
@@ -41,17 +42,29 @@ const profileModal = () => {
       });
     }
     setLoading(false);
-  });
+  }, [user]); // dependency array add kiya
+
   const handleSubmit = async () => {
-    // save the updated user data
-    let { name, image } = userData;
-    if (!name.trim()) {
-      alert("Name is required");
+    if (!userData || !userData.name.trim()) {
+      Alert.alert("Error", "Name is required");
       return;
     }
-    // navigate back to the profile page
-    console.log("User data updated:", userData);
+
+    setLoading(true);
+    try {
+      const response = await UpdateUser(user?.uid || "", userData);
+      if (response.success) {
+        updateUserData(user?.uid || "");
+        Alert.alert("Success", "Profile updated successfully");
+      } else {
+        Alert.alert("Error", "Error updating profile");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    }
+    setLoading(false);
   };
+
   return (
     <ModalWrapper>
       <View style={styles.container}>
@@ -70,7 +83,12 @@ const profileModal = () => {
                 contentFit="cover"
                 transition={100}
               />
-              <TouchableOpacity style={styles.editIcon}>
+              <TouchableOpacity
+                style={styles.editIcon}
+                onPress={() =>
+                  Alert.alert("Edit Profile", "Feature coming soon!")
+                }
+              >
                 <Icons.Pencil size={20} color={colors.neutral800} />
               </TouchableOpacity>
             </View>
