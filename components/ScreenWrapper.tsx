@@ -13,7 +13,7 @@ const ScreenWrapper = ({style,children}:ScreenWrapperProps) => {
         backgroundColor: colors.neutral900,
         ...style
       
-    }]}
+    },styles.container]}
     >
         <StatusBar barStyle={'light-content'}/>
         {children}
@@ -23,4 +23,8 @@ const ScreenWrapper = ({style,children}:ScreenWrapperProps) => {
 
 export default ScreenWrapper
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    }
+})
