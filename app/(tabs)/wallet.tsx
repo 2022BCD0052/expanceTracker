@@ -22,11 +22,19 @@ const wallet = () => {
                 getTotalBalanced()?.toFixed(2)
               }
             </Typo>
+            <Typo size={16} color={colors.neutral300}>
+              Total Balance
+            </Typo>
 
           </View>
-
-
-
+        </View>
+        {/*  wallet view */}
+        <View style={styles.wallets}>
+          {/* header */}
+          <View style={styles.flexRow}>
+            <Typo size={20} fontWeight={"700"}>Wallets</Typo>
+            <Typo size={16} color={colors.neutral300}>View All</Typo>
+          </View>
         </View>
 
         </View>
