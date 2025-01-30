@@ -3,11 +3,33 @@ import React from 'react'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { colors, radius, spacingX, spacingY } from '@/constants/theme'
 import { verticalScale } from '@/utils/styling'
+import Typo from '@/components/Typo'
 
 const wallet = () => {
+  const getTotalBalanced = (): number => {
+    return  2222
+    // Replace with actual logic to get the total balance
+    return 0;
+  }
   return (
     <ScreenWrapper style={{backgroundColor:colors.black}}>
-      <Text>wallet</Text>
+      <View style={styles.container}>
+        {/*  balanced view */}
+        <View style={styles.balanceView}>
+          <View style={{alignItems:'center'}}>
+            <Typo size={45} fontWeight={"800"}>
+              ${
+                getTotalBalanced()?.toFixed(2)
+              }
+            </Typo>
+
+          </View>
+
+
+
+        </View>
+
+        </View>
     </ScreenWrapper>
   )
 }
