@@ -136,9 +136,9 @@ export type AccountOptionType = {
   } | null;
 
   export type UserDataType = {
-    name: string
-    image: string | null;
-    } | null;
+    name: string;
+    image: { uri: string } | null;
+  } | null;
   export type AuthContextType = {
     user: UserType;
     setUser: (user: UserType) => void;

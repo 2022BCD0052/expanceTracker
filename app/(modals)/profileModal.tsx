@@ -60,7 +60,7 @@ const profileModal = () => {
       if (userData) {
         setUserData({
           ...userData,
-          image: result.assets[0].uri,
+          image: { uri: result.assets[0].uri },
         });
       }
     }

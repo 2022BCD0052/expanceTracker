@@ -1,2 +1,3 @@
-export const CLOUDINARY_CLOUD_NAME = "";
-export const CLOUDINARY_UPLOAD_PRESET = "";
+export const CLOUDINARY_CLOUD_NAME = "di4zfsied";
+export const CLOUDINARY_UPLOAD_PRESET = "IMAGES";
+export const CLOUDINARY_API_KEY = "643498645777921";
