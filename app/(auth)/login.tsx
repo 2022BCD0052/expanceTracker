@@ -9,10 +9,12 @@ import * as Icons from "phosphor-react-native";
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/authContext";
+import ScreenWrapper from "@/components/ScreenWrapper";
+
 const Login = () => {
   const router = useRouter();
   const emailRef = useRef("");
-  const { login :   loginUser} = useAuth();
+  const { login: loginUser } = useAuth();
   const passwordRef = useRef("");
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -27,17 +29,18 @@ const Login = () => {
     setIsLoading(false);
     console.log("result", res);
     if (res.success) {
+      // Handle success
     } else {
       alert("An error occurred during login. Please try again.");
     }
   };
 
-
-
-
   return (
+    <ScreenWrapper>
     <View style={styles.container}>
-      <BackButton />
+      <View >
+              <BackButton  />
+      </View>
       <View style={{ gap: 5, marginTop: spacingY._20 }}>
         <Typo size={30} fontWeight={"800"}>
           Hey,
@@ -50,7 +53,7 @@ const Login = () => {
       {/* Form */}
       <View style={styles.form}>
         <Typo size={16} color={colors.textLight}>
-          Login me to track all your expanses
+          Login me to track all your expenses
         </Typo>
         <Input
           placeholder=" Enter Your Email"
@@ -64,28 +67,29 @@ const Login = () => {
           onChange={(event) => (passwordRef.current = event.nativeEvent.text)}
           icon={<Icons.Lock size={verticalScale(26)} />}
         />
-        <Typo style={styles.forgotPassword} size={12} fontWeight={"500"}>          Forgot Password?
+        <Typo style={styles.forgotPassword} size={12} fontWeight={"500"}>
+          Forgot Password?
         </Typo>
-        <Button loading={isLoading} style={{ }} onPress={handleSubmit}>
+        <Button loading={isLoading} style={{}} onPress={handleSubmit}>
           <Typo fontWeight={"700"} size={21} color={colors.black}>
             Login
           </Typo>
         </Button>
-
       </View>
-      {/* footer style */}
+
+      {/* Footer Style */}
       <View style={styles.footer}>
         <Typo size={15} color={colors.white}>
           Don't have an account?
         </Typo>
-        <Pressable onPress={() => router.push("/(auth)/register")} >
+        <Pressable onPress={() => router.push("/(auth)/register")}>
           <Typo size={16} color={colors.primary}>
             Sign up
           </Typo>
         </Pressable>
-
       </View>
     </View>
+    </ScreenWrapper>
   );
 };
 
@@ -95,10 +99,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: spacingX._20,
-    gap: spacingY._30, // Corrected gap property to spacingY._30
-    paddingHorizontal: spacingX._20, // Corrected paddingHorizontal property to spacingX._20
-    backgroundColor: colors.black, // Background,
-  
+    gap: spacingY._30,
+    paddingHorizontal: spacingX._20,
+    backgroundColor: "transparent", // Set background to transparent
   },
   welcomeText: {
     fontSize: verticalScale(20),
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   form: {
-    gap: spacingY._20, // Corrected gap property to spacingY._20
+    gap: spacingY._20,
   },
   forgotPassword: {
     fontSize: verticalScale(15),
@@ -131,4 +134,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
   },
-})
+ 
+});

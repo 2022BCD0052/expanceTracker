@@ -12,8 +12,6 @@ const Home = () => {
   const {user}  = useAuth();
   console.log("user",user);
     const handleLogOut =async () => {
-
-        // Log out
         await signOut(auth)
     }
   return (

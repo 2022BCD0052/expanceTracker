@@ -9,6 +9,7 @@ import * as Icons from "phosphor-react-native";
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/context/authContext";
+import ScreenWrapper from "@/components/ScreenWrapper";
 
 const Register = () => {
   const router = useRouter();
@@ -39,8 +40,9 @@ const Register = () => {
   };
 
   return (
+    <ScreenWrapper>
     <View style={styles.container}>
-      <BackButton />
+      <BackButton  />
       <View style={{ gap: 5, marginTop: spacingY._20 }}>
         <Typo size={30} fontWeight={"800"}>
           Let's,
@@ -93,6 +95,7 @@ const Register = () => {
         </Pressable>
       </View>
     </View>
+    </ScreenWrapper>
   );
 };
 

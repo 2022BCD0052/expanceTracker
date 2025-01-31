@@ -94,7 +94,7 @@ const WalletModal = () => {
                 file={wallet.image}
                 onSelect={(uri) =>
                   setWallet((prev) => ({ ...prev, image: uri }))
-                } // Set the image uri
+                } 
                 onClear={() => setWallet((prev) => ({ ...prev, image: null }))}
                 placeholder="Select an image"
               />

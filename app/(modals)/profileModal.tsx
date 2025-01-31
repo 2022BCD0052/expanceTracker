@@ -17,7 +17,7 @@ import { useAuth } from "@/context/authContext";
 import { UpdateUser } from "@/services/userService";
 import { useRouter } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
-import { ActivityIndicator } from 'react-native';  // Import ActivityIndicator for loading spinner
+import { ActivityIndicator } from 'react-native';  
 
 const profileModal = () => {
   const { user, updateUserData } = useAuth();

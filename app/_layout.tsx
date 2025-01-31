@@ -6,6 +6,7 @@ import { StatusBar } from "react-native";
 function StackLayout() {
   return (
     <>
+    
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       
       <Stack screenOptions={{ headerShown: false }}>

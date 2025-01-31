@@ -8,7 +8,7 @@ export default function Header({ title = "", leftIcon, style }: HeaderProps) {
     <View style={[styles.container, style]}>
       {leftIcon && (
         <View style={styles.leftIcon}>
-          {leftIcon} {/* Render the passed leftIcon */}
+          {leftIcon} 
         </View>
       )}
       <Typo 
@@ -16,7 +16,7 @@ export default function Header({ title = "", leftIcon, style }: HeaderProps) {
         fontWeight="600" 
         style={{
           textAlign: 'center',
-          flex: leftIcon ? 1 : 0, // Use flex for layout adjustment
+          flex: leftIcon ? 1 : 0, 
         }}
       >
         {title}

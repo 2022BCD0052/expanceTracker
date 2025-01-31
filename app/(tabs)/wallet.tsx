@@ -10,16 +10,13 @@ import { useRouter } from 'expo-router';
 const Wallet = () => {
   const router = useRouter();
 
-  // Function to get total balance
   const getTotalBalance = (): number => {
-    // Replace with actual logic to get the total balance
-    return 2222; // Static value, change as per real logic
+    return 2222;
   };
 
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.black }}>
+    <ScreenWrapper >
       <View style={styles.container}>
-        {/* Balance View */}
         <View style={styles.balanceView}>
           <View style={{ alignItems: 'center' }}>
             <Typo size={45} fontWeight="800">
@@ -58,7 +55,7 @@ const styles = StyleSheet.create({
   },
   balanceView: {
     height: verticalScale(160),
-    backgroundColor: colors.black,
+    // backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
   },
