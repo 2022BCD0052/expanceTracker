@@ -94,8 +94,11 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: spacingX._20,
     gap: spacingY._30, // Corrected gap property to spacingY._30
     paddingHorizontal: spacingX._20, // Corrected paddingHorizontal property to spacingX._20
+    backgroundColor: colors.black, // Background,
+  
   },
   welcomeText: {
     fontSize: verticalScale(20),

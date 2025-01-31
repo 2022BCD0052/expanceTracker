@@ -21,6 +21,13 @@ export const uploadImageToCloudinary = async (
   folderName: string
 ): Promise<ResponseType> => {
   try {
+    if (!file) {
+      return {
+        success: false,
+        msg: "No file provided",
+        data: null,
+      };
+    }
     console.log("Received file:", file);
 
     const formData = new FormData();
@@ -85,4 +92,15 @@ export const getProfileImage = (file: any) => {
   }
 
   return require("../assets/images/profile.jpeg");
+};
+
+export const getFilePath = (file: any) => {
+  if (file && typeof file === "string") {
+    return file;
+  }
+  if (file && typeof file === "object") {
+    return file.uri;
+  }
+
+  return null;
 };
