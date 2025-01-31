@@ -34,24 +34,6 @@ const WalletModal = () => {
     })();
   }, []);
 
-  const pickImage = useCallback(async () => {
-    if (!permissionGranted) {
-      Alert.alert("Error", "Camera roll permission is required.");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled && result.assets.length > 0) {
-      setWallet((prev) => ({ ...prev, image: result.assets[0].uri }));
-    }
-  }, [permissionGranted]);
-
   const handleSubmit = useCallback(async () => {
     const { name, image } = wallet;
     if (!name.trim() || !image) {
@@ -89,7 +71,9 @@ const WalletModal = () => {
         />
 
         <ScrollView contentContainerStyle={styles.form}>
+          
           <View style={styles.avatarContainer}>
+            
             <View style={styles.inputContainer}>
               <Typo color={colors.white}>Wallet Name</Typo>
               <Input
@@ -100,6 +84,7 @@ const WalletModal = () => {
                 }
               />
             </View>
+            
 
             <View style={styles.inputContainer}>
               <View>
@@ -107,7 +92,9 @@ const WalletModal = () => {
               </View>
               <ImageUpload
                 file={wallet.image}
-                onSelect={pickImage}
+                onSelect={(uri) =>
+                  setWallet((prev) => ({ ...prev, image: uri }))
+                } // Set the image uri
                 onClear={() => setWallet((prev) => ({ ...prev, image: null }))}
                 placeholder="Select an image"
               />
@@ -116,17 +103,16 @@ const WalletModal = () => {
         </ScrollView>
 
         <View style={styles.footer}>
-        <Button
-  style={{ flex: 1 }}
-  onPress={handleSubmit}
-  loading={loading}
-  disabled={loading} // Disable button during loading
->
-  <Typo color={colors.black} fontWeight="700">
-    Update
-  </Typo>
-</Button>
-
+          <Button
+            style={{ flex: 1 }}
+            onPress={handleSubmit}
+            loading={loading}
+            disabled={loading}
+          >
+            <Typo color={colors.black} fontWeight="700">
+              Update
+            </Typo>
+          </Button>
         </View>
       </View>
     </ModalWrapper>
@@ -161,8 +147,8 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: "relative",
-    alignSelf: "center",
-  },
+    justifyContent: "space-between",
+},
   inputContainer: {
     gap: spacingY._10,
   },

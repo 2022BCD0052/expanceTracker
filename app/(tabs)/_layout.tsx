@@ -5,7 +5,7 @@ import CustonTabs from '@/components/CustonTabs'
 
 const _layout = () => {
   return (
-    <Tabs tabBar={CustonTabs}  screenOptions={{headerShown: false}}>
+    <Tabs tabBar={CustonTabs}  screenOptions={{headerShown:false}}>
       {/* Add your screens here */}
    <Tabs.Screen name="index" options={{title:"index"}} />
     <Tabs.Screen name="statistics" options={{title:"statistics"}} />

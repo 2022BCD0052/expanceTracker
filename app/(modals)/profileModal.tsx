@@ -22,7 +22,7 @@ import { ActivityIndicator } from 'react-native';  // Import ActivityIndicator f
 const profileModal = () => {
   const { user, updateUserData } = useAuth();
   const [userData, setUserData] = useState<{ name: string; image: { uri: string } | null }>({ name: "", image: null });
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false); 
   const router = useRouter();
 
   useEffect(() => {
@@ -60,24 +60,24 @@ const profileModal = () => {
       return;
     }
   
-    setLoading(true); // Set loading to true when starting the update
+    setLoading(true); 
   
     try {
       const response = await UpdateUser(user?.uid || "", userData);
       if (response.success) {
         updateUserData(user?.uid || "");
         Alert.alert("Success", "Profile updated successfully");
-        router.back(); // Navigate back after successful update
+        router.back(); 
       } else {
         Alert.alert("Error", "Error updating profile");
       }
     } catch (error) {
       Alert.alert("Error", "Something went wrong. Please try again.");
     } finally {
-      setLoading(false);  // Set loading to false once the request completes
+      setLoading(false); 
     }
   };
-  
+
   return (
     <ModalWrapper>
       <View style={styles.container}>
@@ -131,62 +131,8 @@ const profileModal = () => {
       </View>
     </ModalWrapper>
   );
-  
-
-  return (
-    <ModalWrapper>
-      <View style={styles.container}>
-        <Header
-          title=" Update Profile"
-          leftIcon={<BackButton  />}
-          style={{ marginBottom: spacingY._10 }}
-        />
-        <ScrollView contentContainerStyle={styles.form}>
-          <View style={styles.avatarContainer}>
-            <View style={styles.avatar}>
-              <Image
-                source={getProfileImage(userData?.image)}
-                style={styles.avatar}
-                contentFit="cover"
-                transition={100}
-              />
-              <TouchableOpacity
-                style={styles.editIcon}
-                onPress={onPickImage}
-              >
-                <Icons.Pencil size={20} color={colors.neutral800} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.inputContainer}>
-              <Typo color={colors.neutral800}>Name</Typo>
-              <Input
-                placeholder="Name"
-                value={userData?.name || ""}
-                onChangeText={(value) => {
-                  setUserData({
-                    ...userData,
-                    name: value,
-                  });
-                }}
-              />
-            </View>
-          </View>
-        </ScrollView>
-        <View style={styles.footer}>
-          <Button style={{ flex: 1 }} onPress={handleSubmit}>
-            {loading ? (
-              <ActivityIndicator size="small" color={colors.black} />
-            ) : (
-              <Typo color={colors.black} fontWeight="700">
-                Update
-              </Typo>
-            )}
-          </Button>
-        </View>
-      </View>
-    </ModalWrapper>
-  );
 };
+
 
 export default profileModal;
 
@@ -214,7 +160,6 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: "relative",
-    alignSelf: "center",
   },
   avatar: {
     alignSelf: "center",

@@ -9,18 +9,28 @@ import { scale, verticalScale } from "@/utils/styling";
 import { getFilePath } from "@/services/imageService";
 import { ImageUploadProps } from "@/types";
 
-const ImageUpload = ({ file = null, onSelect, onClear, containerStyle, imageStyle, placeholder = "image" }: ImageUploadProps) => {
+const ImageUpload = ({
+  file = null,
+  onSelect,
+  onClear,
+  containerStyle,
+  imageStyle,
+  placeholder = "image",
+}: ImageUploadProps) => {
   const [isPicking, setIsPicking] = useState(false);
 
   const pickImage = useCallback(async () => {
     if (isPicking) return;
     setIsPicking(true);
 
-    console.log("pickImage function called"); // Debugging log
+    console.log("pickImage function called");
 
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Error", "Sorry, we need camera roll permissions to make this work!");
+      Alert.alert(
+        "Error",
+        "Sorry, we need camera roll permissions to make this work!"
+      );
       setIsPicking(false);
       return;
     }
@@ -48,20 +58,29 @@ const ImageUpload = ({ file = null, onSelect, onClear, containerStyle, imageStyl
           style={[containerStyle, styles.inputContainer]}
           disabled={isPicking}
         >
-          <Icons.UploadSimple size={30} color={colors.neutral200} weight="fill" />
+          <Icons.UploadSimple
+            size={30}
+            color={colors.neutral200}
+            weight="fill"
+          />
           {placeholder && <Typo>{placeholder}</Typo>}
         </TouchableOpacity>
       )}
-
       {file && (
         <View style={[styles.image, imageStyle]}>
-          <Image style={[styles.image]} source={getFilePath(file)} contentFit="cover" transition={100} />
+          <Image
+            style={[styles.image]}
+            source={getFilePath(file)}
+            contentFit="cover"
+            transition={100}
+          />
           <TouchableOpacity
-  style={styles.deleteIcon}
-  onPress={onClear}
-  accessibilityLabel="Delete selected image"
-  accessibilityHint="Removes the selected image"
->            <Icons.X size={15} color={colors.black} />
+            style={styles.deleteIcon}
+            onPress={onClear}
+            accessibilityLabel="Delete selected image"
+            accessibilityHint="Removes the selected image"
+          >
+            <Icons.X size={15} color={colors.black} />
           </TouchableOpacity>
         </View>
       )}
