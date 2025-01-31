@@ -26,6 +26,7 @@ import { useRouter } from "expo-router";
 import { UserDataType, WalletType } from "@/types";
 import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ImageUpload";
+import { createOrUpdateWallet } from "@/services/walletService";
 
 const WalletModal = () => {
   const { user, updateUserData } = useAuth();
@@ -76,6 +77,24 @@ const WalletModal = () => {
     if (!name.trim() || !image) {
       Alert.alert("Error", "Wallet name is required");
       return;
+    }
+    const data :WalletType={
+      name,
+      image,
+      uid: user?.uid || "",
+
+    }
+    // todo include other fields if needed
+    const res = await createOrUpdateWallet(data);
+    setLoading(false);
+    if (res.success) {
+      console.log("Wallet updated:", Wallet);
+      console.log(res.data);
+      Alert.alert("Success", "Wallet updated successfully");
+      router.back();
+    } else {
+      Alert.alert("Error", "Error updating wallet");
+      console.log("Error updating wallet:", res.msg);
     }
 
     setLoading(true);
