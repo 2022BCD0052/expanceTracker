@@ -1,6 +1,6 @@
 import { ResponseType, WalletType } from "@/types";
 import { uploadImageToCloudinary } from "./imageService";
-import { doc, Firestore } from "firebase/firestore";
+import { doc, setDoc, updateDoc, collection } from "firebase/firestore";
 import { firestore } from "@/config/firebase";
 
 export const createOrUpdateWallet = async (
@@ -24,18 +24,29 @@ export const createOrUpdateWallet = async (
       walletToSave.image = imageUploadRes.data;
     }
 
-    // Add or update the wallet data in the database (API call / Database operation)
-    if(!walletToSave.id) {
-        // Create a new wallet
-        walletToSave.amount = 0;
-        walletToSave.created = new Date();
-        walletToSave.totalIncome = 0;
-        walletToSave.totalExpenses = 0;
+    // Check if wallet exists, if not, initialize default values
+    let walletRef;
+    if (!walletToSave.id) {
+      // Create a new wallet
+      walletToSave.amount = 0;
+      walletToSave.created = new Date();
+      walletToSave.totalIncome = 0;
+      walletToSave.totalExpenses = 0;
+
+      // Generate a new document reference
+      walletRef = doc(collection(firestore, "wallets"));
+      walletToSave.id = walletRef.id; // Assign generated ID
+    } else {
+      // Reference existing wallet document
+      walletRef = doc(firestore, `wallets/${walletToSave.id}`);
     }
-    const walletRef = walletData?.id?doc(firestore, `wallets/${walletData.id}`):doc(collection(firestore, "wallets"));
-    
-    // Proceed with saving the wallet data (API call / Database operation)
-    // Example: const response = await saveWalletToDB(walletToSave);
+
+    // Save or update wallet data in Firestore
+    if (!walletData.id) {
+      await setDoc(walletRef, walletToSave); // Create new document
+    } else {
+      await updateDoc(walletRef, walletToSave); // Update existing document
+    }
 
     return {
       success: true,
@@ -44,14 +55,10 @@ export const createOrUpdateWallet = async (
     };
 
   } catch (error: any) {
-    console.log("Error creating or updating wallet:", error);
+    console.error("Error creating or updating wallet:", error);
     return {
       success: false,
       msg: error.message || "An unexpected error occurred",
     };
   }
 };
-function collection(firestore: Firestore, arg1: string): import("@firebase/firestore").CollectionReference<unknown, import("@firebase/firestore").DocumentData> {
-    throw new Error("Function not implemented.");
-}
-

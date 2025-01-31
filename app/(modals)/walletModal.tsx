@@ -1,11 +1,4 @@
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
@@ -13,98 +6,70 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import ModalWrapper from "@/components/ModalWrapper";
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
-import { getProfileImage } from "@/services/imageService";
-import { User, UserCircle } from "phosphor-react-native";
-import { Image } from "expo-image";
 import Typo from "@/components/Typo";
-import * as Icons from "phosphor-react-native";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { useAuth } from "@/context/authContext";
-import { UpdateUser } from "@/services/userService";
 import { useRouter } from "expo-router";
-import { UserDataType, WalletType } from "@/types";
 import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ImageUpload";
 import { createOrUpdateWallet } from "@/services/walletService";
 
 const WalletModal = () => {
   const { user, updateUserData } = useAuth();
-  const [Wallet, setWallet] = useState<WalletType>({
+  const [wallet, setWallet] = useState<{ name: string; image: string | null }>({
     name: "",
     image: null,
   });
-  const [Loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [permissionGranted, setPermissionGranted] = useState(false);
   const router = useRouter();
 
-  // Image picker (uncomment if needed)
-  const [isPicking, setIsPicking] = React.useState(false);
+  // Request permission once when the component mounts
+  useEffect(() => {
+    (async () => {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setPermissionGranted(status === "granted");
+    })();
+  }, []);
 
-  const pickImage = async () => {
-    if (isPicking) return; // Prevent duplicate execution
-    setIsPicking(true);
-  
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Error", "Sorry, we need camera roll permissions to make this work!");
-      setIsPicking(false);
+  const pickImage = useCallback(async () => {
+    if (!permissionGranted) {
+      Alert.alert("Error", "Camera roll permission is required.");
       return;
     }
-  
+
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Fix media type format
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-  
-    if (!result.canceled) {
-      setWallet({ ...Wallet, image: result.assets[0].uri });
+
+    if (!result.canceled && result.assets.length > 0) {
+      setWallet((prev) => ({ ...prev, image: result.assets[0].uri }));
     }
-  
-    setIsPicking(false);
-  };
-  
-  // Inside button
-  <TouchableOpacity onPress={pickImage} disabled={isPicking}>
-    <Text>Select Image</Text>
-  </TouchableOpacity>
-  
+  }, [permissionGranted]);
 
-  const handleSubmit = async () => {
-    let { name, image } = Wallet; 
-
+  const handleSubmit = useCallback(async () => {
+    const { name, image } = wallet;
     if (!name.trim() || !image) {
-      Alert.alert("Error", "Wallet name is required");
+      Alert.alert("Error", "Wallet name and image are required.");
       return;
-    }
-    const data :WalletType={
-      name,
-      image,
-      uid: user?.uid || "",
-
-    }
-    // todo include other fields if needed
-    const res = await createOrUpdateWallet(data);
-    setLoading(false);
-    if (res.success) {
-      console.log("Wallet updated:", Wallet);
-      console.log(res.data);
-      Alert.alert("Success", "Wallet updated successfully");
-      router.back();
-    } else {
-      Alert.alert("Error", "Error updating wallet");
-      console.log("Error updating wallet:", res.msg);
     }
 
     setLoading(true);
+    const data = { name, image, uid: user?.uid || "" };
+
     try {
-      const response = await UpdateUser(user?.uid || "", Wallet);
-      if (response.success) {
-        updateUserData(user?.uid || "");
+      const res = await createOrUpdateWallet(data);
+      if (res.success) {
         Alert.alert("Success", "Wallet updated successfully");
+        router.back();
       } else {
         Alert.alert("Error", "Error updating wallet");
+        console.error("Wallet update error:", res.msg);
       }
     } catch (error) {
       console.error("Wallet Update Error:", error);
@@ -112,7 +77,7 @@ const WalletModal = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [wallet, user, router]);
 
   return (
     <ModalWrapper>
@@ -122,45 +87,48 @@ const WalletModal = () => {
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
-        
+
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.avatarContainer}>
-            {/* Image picker button */}
-
             <View style={styles.inputContainer}>
-              <Typo color={colors.white}>WalletName</Typo>
+              <Typo color={colors.white}>Wallet Name</Typo>
               <Input
-                placeholder="Name"
-                value={Wallet.name}
-                onChangeText={(value) => setWallet({ ...Wallet, name: value })}
+                placeholder="Enter wallet name"
+                value={wallet.name}
+                onChangeText={(value) =>
+                  setWallet((prev) => ({ ...prev, name: value }))
+                }
               />
             </View>
+
             <View style={styles.inputContainer}>
-              <Typo color={colors.white}>Wallet Icon</Typo>
-              {/* image component */}
+              <View>
+                <Typo color={colors.white}>Wallet Icon</Typo>
+              </View>
               <ImageUpload
-                file={Wallet.image}
-                onSelect={()=> pickImage() }
-                
-                onClear={() => setWallet({ ...Wallet, image: null })}
-                placeholder="image"
+                file={wallet.image}
+                onSelect={pickImage}
+                onClear={() => setWallet((prev) => ({ ...prev, image: null }))}
+                placeholder="Select an image"
               />
             </View>
           </View>
         </ScrollView>
 
         <View style={styles.footer}>
-          
-          <Button style={{ flex: 1 }} onPress={handleSubmit}>
-            <Typo color={colors.black} fontWeight={"700"}>
-              Update
-            </Typo>
-          </Button>
-          
+        <Button
+  style={{ flex: 1 }}
+  onPress={handleSubmit}
+  loading={loading}
+  disabled={loading} // Disable button during loading
+>
+  <Typo color={colors.black} fontWeight="700">
+    Update
+  </Typo>
+</Button>
+
         </View>
-        
       </View>
-      
     </ModalWrapper>
   );
 };
@@ -185,29 +153,15 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._5,
     borderTopWidth: 1,
   },
-
   form: {
     gap: spacingY._30,
     width: "100%",
     marginBottom: spacingY._30,
     marginTop: spacingY._15,
   },
-
   avatarContainer: {
     position: "relative",
     alignSelf: "center",
-  },
-
-  avatar: {
-    alignSelf: "center",
-    backgroundColor: colors.neutral300,
-    height: verticalScale(135),
-    width: verticalScale(135),
-    borderRadius: 200,
-    borderWidth: 1,
-    borderColor: colors.neutral500,
-    justifyContent: "center",
-    alignItems: "center",
   },
   inputContainer: {
     gap: spacingY._10,

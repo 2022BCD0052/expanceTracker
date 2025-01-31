@@ -1,11 +1,4 @@
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
@@ -14,7 +7,7 @@ import ModalWrapper from "@/components/ModalWrapper";
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
 import { getProfileImage } from "@/services/imageService";
-import { User, UserCircle } from "phosphor-react-native";
+import { UserCircle } from "phosphor-react-native";
 import { Image } from "expo-image";
 import Typo from "@/components/Typo";
 import * as Icons from "phosphor-react-native";
@@ -23,15 +16,13 @@ import Button from "@/components/Button";
 import { useAuth } from "@/context/authContext";
 import { UpdateUser } from "@/services/userService";
 import { useRouter } from "expo-router";
-import { UserDataType } from "@/types";
 import * as ImagePicker from 'expo-image-picker';
+import { ActivityIndicator } from 'react-native';  // Import ActivityIndicator for loading spinner
+
 const profileModal = () => {
   const { user, updateUserData } = useAuth();
-  const [userData, setUserData] = useState<UserDataType>({
-    name: "",
-    image: null,
-  });
-  const [Loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<{ name: string; image: { uri: string } | null }>({ name: "", image: null });
+  const [loading, setLoading] = useState(false); // Loading state
   const router = useRouter();
 
   useEffect(() => {
@@ -41,8 +32,7 @@ const profileModal = () => {
         image: user?.image || null,
       });
     }
-    setLoading(false);
-  }, [user]); // dependency array add kiya
+  }, [user]);
 
   const onPickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -57,47 +47,45 @@ const profileModal = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      if (userData) {
-        setUserData({
-          ...userData,
-          image: { uri: result.assets[0].uri },
-        });
-      }
+      setUserData({
+        ...userData,
+        image: { uri: result.assets[0].uri },
+      });
     }
   };
-
-
 
   const handleSubmit = async () => {
     if (!userData || !userData.name.trim()) {
       Alert.alert("Error", "Name is required");
       return;
     }
-
-    setLoading(true);
+  
+    setLoading(true); // Set loading to true when starting the update
+  
     try {
       const response = await UpdateUser(user?.uid || "", userData);
       if (response.success) {
         updateUserData(user?.uid || "");
         Alert.alert("Success", "Profile updated successfully");
+        router.back(); // Navigate back after successful update
       } else {
         Alert.alert("Error", "Error updating profile");
       }
     } catch (error) {
       Alert.alert("Error", "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);  // Set loading to false once the request completes
     }
-    setLoading(false);
   };
-
+  
   return (
     <ModalWrapper>
       <View style={styles.container}>
         <Header
           title=" Update Profile"
-          leftIcon={<UserCircle />}
+          leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
-        {/* <ProfileForm /> */}
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.avatarContainer}>
             <View style={styles.avatar}>
@@ -109,9 +97,7 @@ const profileModal = () => {
               />
               <TouchableOpacity
                 style={styles.editIcon}
-                onPress={onPickImage
-
-                }
+                onPress={onPickImage}
               >
                 <Icons.Pencil size={20} color={colors.neutral800} />
               </TouchableOpacity>
@@ -122,13 +108,65 @@ const profileModal = () => {
                 placeholder="Name"
                 value={userData?.name || ""}
                 onChangeText={(value) => {
-                  if (userData) {
-                    setUserData({
-                      ...userData,
-                      name: value,
-                      image: userData.image,
-                    });
-                  }
+                  setUserData({
+                    ...userData,
+                    name: value,
+                  });
+                }}
+              />
+            </View>
+          </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <Button style={{ flex: 1 }} onPress={handleSubmit} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator size="small" color={colors.black} />
+            ) : (
+              <Typo color={colors.black} fontWeight="700">
+                Update
+              </Typo>
+            )}
+          </Button>
+        </View>
+      </View>
+    </ModalWrapper>
+  );
+  
+
+  return (
+    <ModalWrapper>
+      <View style={styles.container}>
+        <Header
+          title=" Update Profile"
+          leftIcon={<BackButton  />}
+          style={{ marginBottom: spacingY._10 }}
+        />
+        <ScrollView contentContainerStyle={styles.form}>
+          <View style={styles.avatarContainer}>
+            <View style={styles.avatar}>
+              <Image
+                source={getProfileImage(userData?.image)}
+                style={styles.avatar}
+                contentFit="cover"
+                transition={100}
+              />
+              <TouchableOpacity
+                style={styles.editIcon}
+                onPress={onPickImage}
+              >
+                <Icons.Pencil size={20} color={colors.neutral800} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <Typo color={colors.neutral800}>Name</Typo>
+              <Input
+                placeholder="Name"
+                value={userData?.name || ""}
+                onChangeText={(value) => {
+                  setUserData({
+                    ...userData,
+                    name: value,
+                  });
                 }}
               />
             </View>
@@ -136,9 +174,13 @@ const profileModal = () => {
         </ScrollView>
         <View style={styles.footer}>
           <Button style={{ flex: 1 }} onPress={handleSubmit}>
-            <Typo color={colors.black} fontWeight={"700"}>
-              Update
-            </Typo>
+            {loading ? (
+              <ActivityIndicator size="small" color={colors.black} />
+            ) : (
+              <Typo color={colors.black} fontWeight="700">
+                Update
+              </Typo>
+            )}
           </Button>
         </View>
       </View>
@@ -166,17 +208,14 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._5,
     borderTopWidth: 1,
   },
-
   form: {
     gap: spacingY._30,
     marginTop: spacingY._15,
   },
-
   avatarContainer: {
     position: "relative",
     alignSelf: "center",
   },
-
   avatar: {
     alignSelf: "center",
     backgroundColor: colors.neutral300,
@@ -185,8 +224,6 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     borderWidth: 1,
     borderColor: colors.neutral500,
-    // overflow: "hidden",
-    // position: "relative",
   },
   editIcon: {
     position: "absolute",
@@ -199,9 +236,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 4,
-    padding: spacingY._7, // Fixed spacing issue here
+    padding: spacingY._7,
   },
   inputContainer: {
-    gap: spacingY._10, // Fixed misplaced closing bracket
+    gap: spacingY._10,
   },
 });

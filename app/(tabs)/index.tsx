@@ -18,8 +18,7 @@ const Home = () => {
     }
   return (
     <ScreenWrapper>
-        <Text></Text>
-
+        <Typo size={24} fontWeight="600" style={{textAlign:"center"}}>Home</Typo>
         {/* Home Page Content */}
         {/* Navigation */}
         {/* Dynamic Content */}

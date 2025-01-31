@@ -3,104 +3,82 @@ import { ResponseType } from "@/types";
 import axios from "axios";
 
 // Cloudinary setup
-const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`; // Replace with your Cloudinary URL
+const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
 interface ImageFile {
   uri: string;
-  type: string;
-  fileName: string;
+  type?: string;
+  fileName?: string;
 }
 
 interface CloudinaryResponse {
   secure_url: string;
 }
 
-// Function to upload image to Cloudinary
 export const uploadImageToCloudinary = async (
   file: ImageFile | string,
   folderName: string
 ): Promise<ResponseType> => {
   try {
     if (!file) {
-      return {
-        success: false,
-        msg: "No file provided",
-        data: null,
-      };
+      return { success: false, msg: "No file provided", data: null };
     }
-    console.log("Received file:", file);
+
+    console.log("Uploading file:", file);
 
     const formData = new FormData();
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    formData.append("folder", folderName); // Specify the folder in Cloudinary
 
     if (typeof file === "string") {
-      // Handle base64 string (if the file is a base64 encoded image)
+      // Handle Base64 string
       if (file.startsWith("data:image")) {
-        formData.append("file", file); // Directly append base64 string as the file
-        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-        formData.append("folder", folderName); // Add folder name if needed
+        formData.append("file", file);
+      } else {
+        return { success: false, msg: "Invalid base64 format", data: null };
       }
-    } else if (file && file.uri) {
-      // If file is a normal image object (with uri, type, and fileName)
+    } else if (file.uri) {
+      // Fetch the image as Blob (required in React Native)
+      const response = await fetch(file.uri);
+      const blob = await response.blob();
+
       formData.append("file", {
         uri: file.uri,
-        type: file.type || "image/jpeg", // Use file's type or default to image/jpeg
+        type: file.type || "image/jpeg",
         name: file.fileName || file.uri.split("/").pop() || "file.jpg",
       } as any);
-
-      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-      formData.append("folder", folderName); // Add folder name if needed
     }
 
-    console.log("Sending request to Cloudinary with formData:", formData);
+    console.log("Sending request to Cloudinary...");
 
-    const response = await axios.post<CloudinaryResponse>(cloudinaryUrl, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    const response = await axios.post<CloudinaryResponse>(CLOUDINARY_URL, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
-    console.log("Response: ", response);
-    console.log("Secure URL: ", response?.data?.secure_url);
-
-    if (response.status === 200 && response.data) {
-      return {
-        success: true,
-        data: response?.data?.secure_url,
-      };
+    if (response.status === 200 && response.data?.secure_url) {
+      console.log("Upload successful:", response.data.secure_url);
+      return { success: true, data: response.data.secure_url };
     }
 
-    return {
-      success: false,
-      msg: "Failed to upload image",
-    };
-  } catch (error) {
-    console.error("Error uploading image to Cloudinary", error);
-    return {
-      success: false,
-      msg: "Error uploading image to Cloudinary",
-    };
+    return { success: false, msg: "Failed to upload image" };
+
+  } catch (error: any) {
+    console.error("Error uploading image to Cloudinary:", error.message || error);
+    return { success: false, msg: "Error uploading image to Cloudinary" };
   }
 };
 
-// Helper function to get profile image based on input
-export const getProfileImage = (file: any) => {
-  if (file && typeof file === "string") {
-    return file;
-  }
-  if (file && typeof file === "object") {
-    return file.uri;
-  }
 
-  return require("../assets/images/profile.jpeg");
+// Helper function to get a profile image path
+export const getProfileImage = (file: any): string => {
+  if (file && typeof file === "string") return file;
+  if (file && typeof file === "object") return file.uri;
+  return require("../assets/images/profile.jpeg"); // Default profile image
 };
 
-export const getFilePath = (file: any) => {
-  if (file && typeof file === "string") {
-    return file;
-  }
-  if (file && typeof file === "object") {
-    return file.uri;
-  }
-
+// Helper function to get file path
+export const getFilePath = (file: any): string | null => {
+  if (file && typeof file === "string") return file;
+  if (file && typeof file === "object") return file.uri;
   return null;
 };

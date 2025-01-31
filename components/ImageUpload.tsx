@@ -56,8 +56,12 @@ const ImageUpload = ({ file = null, onSelect, onClear, containerStyle, imageStyl
       {file && (
         <View style={[styles.image, imageStyle]}>
           <Image style={[styles.image]} source={getFilePath(file)} contentFit="cover" transition={100} />
-          <TouchableOpacity style={styles.deleteIcon} onPress={onClear}>
-            <Icons.X size={15} color={colors.black} />
+          <TouchableOpacity
+  style={styles.deleteIcon}
+  onPress={onClear}
+  accessibilityLabel="Delete selected image"
+  accessibilityHint="Removes the selected image"
+>            <Icons.X size={15} color={colors.black} />
           </TouchableOpacity>
         </View>
       )}
