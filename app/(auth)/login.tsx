@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     paddingTop: spacingX._20,
     gap: spacingY._30,
     paddingHorizontal: spacingX._20,
-    backgroundColor: "transparent", // Set background to transparent
+    // backgroundColor: "transparent", // Set background to transparent
   },
   welcomeText: {
     fontSize: verticalScale(20),
